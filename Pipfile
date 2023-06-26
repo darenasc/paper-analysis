@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+ipykernel = "*"
+streamlit = "*"
+bs4 = "*"
+paper-analysis = {editable = true, path = "."}
+pydoi = "*"
+crossrefapi = "*"
+semanticscholar = "*"
+pandas = "*"
+plotly = "*"
+nbformat = "*"
+matplotlib = "*"
+
+[dev-packages]
+black = {extras = ["jupyter"], version = "*"}
+mypy = "*"
+pylint = "*"
+
+[requires]
+python_version = "3.7"
