@@ -4,6 +4,7 @@
 - [DataCite API](https://support.datacite.org/docs/api).
 - [arXiv API](https://info.arxiv.org/help/api/index.html)
 - [Semantic Scholar](https://www.semanticscholar.org)
+    - [semanticscholar](https://github.com/danielnsilva/semanticscholar)
 - [CrossRef API](https://api.crossref.org/swagger-ui/index.html)
 
 ## The process
