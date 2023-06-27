@@ -22,10 +22,11 @@ if id_type == "URL":
     )
 input_str = st.text_input(
     "Search",
-    "https://www.semanticscholar.org/paper/Mapping-poverty-at-multiple-geographical-scales-Nicolò-Fabrizi/f24dc845602d5b395b3c33697e6edcf29ad5776a",
 )
 
-paper_id = s2.get_paper_id(input_str, id_type)
+paper_id = None
+if input_str:
+    paper_id = s2.get_paper_id(input_str, id_type)
 
 
 if paper_id:
