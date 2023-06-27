@@ -1,3 +1,4 @@
+import plotly.express as px
 import streamlit as st
 
 from paper_analysis import semantic_scholar as s2
@@ -24,13 +25,9 @@ input_str = st.text_input(
     "Search",
 )
 
-paper_id = None
 if input_str:
     paper_id = s2.get_paper_id(input_str, id_type)
-
-
-if paper_id:
-    paper = s2.get_paper_from_id(paper_id=paper_id)
+    paper = s2.get_paper_from_id(paper_id)
     df_references = s2.get_references_df(paper.references)
     title = f"Paper: {paper.title} ({paper.year})"
     fig = s2.plot_references_timeline(df_references, title)

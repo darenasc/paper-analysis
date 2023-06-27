@@ -153,6 +153,10 @@ def plot_references_timeline(df: pd.DataFrame, title: str):
     Returns:
         px.scatter: figure with the references timeline.
     """
+    # 450 is the default value
+    suggested_height = (
+        25 * len(df.venue.unique()) if int(25 * len(df.venue.unique())) > 450 else 450
+    )
     fig = px.scatter(
         df,
         x="publicationDate",
@@ -162,7 +166,7 @@ def plot_references_timeline(df: pd.DataFrame, title: str):
         # marginal_x="histogram",
         title=title,
         hover_data=["title", "referenceCount", "citationCount"],
-        height=int(25 * len(df.venue.unique())),
+        height=suggested_height,
     )
     fig.update_yaxes(dtick=1, type="category", showgrid=True)
     fig.update_layout(template="plotly_dark")
