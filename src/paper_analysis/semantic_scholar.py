@@ -64,6 +64,8 @@ def get_references(references: list) -> pd.DataFrame:
         if ref["publicationVenue"]:
             if "type" in ref["publicationVenue"]:
                 publication_venue_type = ref["publicationVenue"]["type"]
+            else:
+                publication_venue_type = None
         else:
             publication_venue_type = None
         data.append(
