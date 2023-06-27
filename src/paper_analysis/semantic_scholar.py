@@ -107,8 +107,18 @@ def get_references_df(references: list) -> pd.DataFrame:
         ],
     )
     df.citationCount = df.citationCount.fillna(0)
-    df["binning"] = pd.qcut(df.citationCount, 8, labels=False)
-    df["binning"] = df["binning"] + 1
+
+    # Resizing for the scatter plot
+    min_size, max_size = 12, 1000
+    x, y = df.citationCount.min(), df.citationCount.max()
+    df["size"] = (df.citationCount - x) / (y - x) * (max_size - min_size) + min_size
+
+    # Sorting the dataframe by number of publications in venues
+    df["total_citation_count"] = df.groupby(["venue"], as_index=False)[
+        "citationCount"
+    ].transform(sum)
+    df = df.sort_values(by="total_citation_count").reset_index(drop=True)
+    df = df.drop(columns=["total_citation_count"])
     return df
 
 
@@ -157,17 +167,21 @@ def plot_references_timeline(df: pd.DataFrame, title: str):
     """
     # 450 is the default value
     suggested_height = (
-        25 * len(df.venue.unique()) if int(25 * len(df.venue.unique())) > 450 else 450
+        25 * len(df.venue.unique()) + 300
+        if int(25 * len(df.venue.unique())) + 300 > 450
+        else 450
     )
     fig = px.scatter(
         df,
         x="publicationDate",
         y="venue",
-        size_max=80,
+        size="size",
+        size_max=70,
         color="citationCount",
-        # marginal_x="histogram",
+        marginal_x="histogram",
         title=title,
-        hover_data=["title", "referenceCount", "citationCount"],
+        hover_data={"citationCount": True, "size": False},
+        hover_name="title",
         height=suggested_height,
     )
     fig.update_yaxes(dtick=1, type="category", showgrid=True)
