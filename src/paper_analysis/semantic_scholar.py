@@ -112,11 +112,18 @@ def get_references_df(references: list) -> pd.DataFrame:
     df.influentialCitationCount = df.influentialCitationCount.fillna(0)
 
     # Resizing for the scatter plot
-    min_size, max_size = 12, 1000
+    a, b = 12, 1000
     x, y = df.influentialCitationCount.min(), df.influentialCitationCount.max()
-    df["size"] = (df.influentialCitationCount - x) / (y - x) * (
-        max_size - min_size
-    ) + min_size
+    df["influential_size"] = (df.influentialCitationCount - x) / (y - x) * (b - a) + a
+
+    x, y = df.citationCount.min(), df.citationCount.max()
+    df["citation_size"] = (df.citationCount - x) / (y - x) * (b - a) + a
+
+    # min_size, max_size = 12, 1000
+    # x, y = df.influentialCitationCount.min(), df.influentialCitationCount.max()
+    # df["size"] = (df.influentialCitationCount - x) / (y - x) * (
+    #     max_size - min_size
+    # ) + min_size
     # x, y = df.citationCount.min(), df.citationCount.max()
     # df["size"] = (df.citationCount - x) / (y - x) * (max_size - min_size) + min_size
 
@@ -182,18 +189,37 @@ def plot_references_timeline(df: pd.DataFrame, title: str):
         df,
         x="publicationDate",
         y="venue",
-        size="size",
+        size="citation_size",
         size_max=70,
         color="citationCount",
         marginal_x="histogram",
         title=title,
-        hover_data={"citationCount": True, "size": False},
+        hover_data={"citationCount": True, "citation_size": False},
         hover_name="title",
         height=suggested_height,
     )
     fig.layout.yaxis.type = "category"
     fig.update_yaxes(showgrid=True)
     fig.update_layout(template="plotly_dark")
+
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                buttons=[
+                    dict(
+                        args=[{"marker.size": [df["citation_size"]]}],
+                        label="Citations",
+                        method="update",
+                    ),
+                    dict(
+                        args=[{"marker.size": [df["influential_size"]]}],
+                        label="Influence",
+                        method="update",
+                    ),
+                ]
+            )
+        ]
+    )
     return fig
 
 
