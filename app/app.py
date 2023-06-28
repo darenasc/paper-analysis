@@ -57,7 +57,7 @@ if input_str:
             unsafe_allow_html=True,
         )
         st.markdown(
-            f"<p style='text-align: center;'>{', '.join([x for x in paper.fieldsOfStudy])}</p>",
+            f"<p style='text-align: center;'>{s2.get_fields_of_study(paper)}</p>",
             unsafe_allow_html=True,
         )
 

@@ -184,6 +184,22 @@ def plot_references_timeline(df: pd.DataFrame, title: str):
         hover_name="title",
         height=suggested_height,
     )
-    fig.update_yaxes(dtick=1, type="category", showgrid=True)
+    fig.layout.yaxis.type = "category"
+    fig.update_yaxes(showgrid=True)
     fig.update_layout(template="plotly_dark")
     return fig
+
+
+def get_fields_of_study(paper: "Paper") -> str:
+    """Returns a string with the fields of study.
+
+    Args:
+        paper (Paper): paper object to get fields of study.
+
+    Returns:
+        str: Fields of study.
+    """
+    fields_of_study = ""
+    if paper["fieldsOfStudy"]:
+        fields_of_study += ", ".join([x for x in paper.fieldsOfStudy])
+    return fields_of_study
