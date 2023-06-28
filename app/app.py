@@ -28,6 +28,24 @@ input_str = st.text_input(
 if input_str:
     paper_id = s2.get_paper_id(input_str, id_type)
     paper = s2.get_paper_from_id(paper_id)
+
+    authors, tltr, fields_of_study = st.columns(3)
+
+    with authors:
+        st.subheader("Authors")
+        for author in paper.authors:
+            st.markdown(
+                f"[{author['name']}]({author['url']}) (citations: {author['citationCount']}, hIndex: {author['hIndex']}, papers: {author['paperCount']})"
+            )
+
+    with tltr:
+        st.subheader("tltr")
+        st.markdown(paper.tldr)
+
+    with fields_of_study:
+        st.subheader("Fields of study")
+        st.markdown(", ".join([x for x in paper.fieldsOfStudy]))
+
     df_references = s2.get_references_df(paper.references)
     title = f"Paper: {paper.title} ({paper.year})"
     fig = s2.plot_references_timeline(df_references, title)
