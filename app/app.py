@@ -45,6 +45,11 @@ if input_str:
         st.markdown(
             f"<p style='text-align: center;'>{paper.tldr}</p>", unsafe_allow_html=True
         )
+        with st.expander("See abstract"):
+            st.markdown(
+                f"<p style='text-align: center;'><b>{paper.abstract}</p>",
+                unsafe_allow_html=True,
+            )
 
     with fields_of_study:
         st.markdown(
