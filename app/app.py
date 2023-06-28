@@ -32,19 +32,29 @@ if input_str:
     authors, tltr, fields_of_study = st.columns(3)
 
     with authors:
-        st.subheader("Authors")
+        st.markdown(
+            "<h3 style='text-align: center;'>Authors</h3>", unsafe_allow_html=True
+        )
         for author in paper.authors:
             st.markdown(
-                f"[{author['name']}]({author['url']}) (citations: {author['citationCount']}, hIndex: {author['hIndex']}, papers: {author['paperCount']})"
+                f"[{author['name']}]({author['url']}) (papers: {author['paperCount']}, citations: {author['citationCount']}, hIndex: {author['hIndex']})"
             )
 
     with tltr:
-        st.subheader("tltr")
-        st.markdown(paper.tldr)
+        st.markdown("<h3 style='text-align: center;'>tltr</h3>", unsafe_allow_html=True)
+        st.markdown(
+            f"<p style='text-align: center;'>{paper.tldr}</p>", unsafe_allow_html=True
+        )
 
     with fields_of_study:
-        st.subheader("Fields of study")
-        st.markdown(", ".join([x for x in paper.fieldsOfStudy]))
+        st.markdown(
+            "<h3 style='text-align: center;'>Fields of study</h3>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f"<p style='text-align: center;'>{', '.join([x for x in paper.fieldsOfStudy])}</p>",
+            unsafe_allow_html=True,
+        )
 
     df_references = s2.get_references_df(paper.references)
     title = f"Paper: {paper.title} ({paper.year})"
