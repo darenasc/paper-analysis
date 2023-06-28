@@ -78,6 +78,7 @@ def get_references(references: list) -> pd.DataFrame:
                 publication_venue_type,
                 ref["referenceCount"],
                 ref["citationCount"],
+                ref["influentialCitationCount"],
             )
         )
     return data
@@ -104,14 +105,20 @@ def get_references_df(references: list) -> pd.DataFrame:
             "publication_venue_type",
             "referenceCount",
             "citationCount",
+            "influentialCitationCount",
         ],
     )
     df.citationCount = df.citationCount.fillna(0)
+    df.influentialCitationCount = df.influentialCitationCount.fillna(0)
 
     # Resizing for the scatter plot
     min_size, max_size = 12, 1000
-    x, y = df.citationCount.min(), df.citationCount.max()
-    df["size"] = (df.citationCount - x) / (y - x) * (max_size - min_size) + min_size
+    x, y = df.influentialCitationCount.min(), df.influentialCitationCount.max()
+    df["size"] = (df.influentialCitationCount - x) / (y - x) * (
+        max_size - min_size
+    ) + min_size
+    # x, y = df.citationCount.min(), df.citationCount.max()
+    # df["size"] = (df.citationCount - x) / (y - x) * (max_size - min_size) + min_size
 
     # Sorting the dataframe by number of publications in venues
     df["total_citation_count"] = df.groupby(["venue"], as_index=False)[
