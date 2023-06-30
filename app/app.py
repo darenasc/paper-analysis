@@ -1,4 +1,3 @@
-import plotly.express as px
 import streamlit as st
 
 from paper_analysis import semantic_scholar as s2
@@ -41,7 +40,9 @@ if input_str:
             )
 
     with tltr:
-        st.markdown("<h3 style='text-align: center;'>tltr</h3>", unsafe_allow_html=True)
+        st.markdown(
+            "<h3 style='text-align: center;'>tl;dr</h3>", unsafe_allow_html=True
+        )
         st.markdown(
             f"<p style='text-align: center;'>{paper.tldr}</p>", unsafe_allow_html=True
         )
