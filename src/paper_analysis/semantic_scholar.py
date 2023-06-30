@@ -1,8 +1,6 @@
-from enum import Enum
-
 import pandas as pd
-import requests
 import plotly.express as px
+import requests
 from semanticscholar import SemanticScholar
 
 SUPPORTED_WEBSITE_URL = [
