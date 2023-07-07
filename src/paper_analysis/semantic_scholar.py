@@ -139,6 +139,7 @@ def generate_url(input_str: str, id_type: str = "URL") -> str:
 
     Args:
         input_str: The input string.
+        id_type (str): Options are "URL", "DOI", "ARXIV", "MAG", "ACL", "PMID", "PMCID".
 
     Returns:
         str: The generated URL.
@@ -159,6 +160,7 @@ def get_paper_id(paper_url: str, id_type: str) -> str:
 
     Args:
         paper_url (str): url to search in the API.
+        id_type (str): Options are "URL", "DOI", "ARXIV", "MAG", "ACL", "PMID", "PMCID".
 
     Returns:
         str: paperID string.
@@ -234,3 +236,105 @@ def get_fields_of_study(paper: "Paper") -> str:
     if paper["fieldsOfStudy"]:
         fields_of_study += ", ".join([x for x in paper.fieldsOfStudy])
     return fields_of_study
+
+
+####### Functions to generate table of references #######
+def get_publication_venue_name(publicationVenue):
+    text = ""
+    name = ""
+    if publicationVenue:
+        if "name" in publicationVenue:
+            name += publicationVenue["name"]
+        if "url" in publicationVenue:
+            text += f'[{name}]({publicationVenue["url"]})'
+        else:
+            text = name
+
+    return text
+
+
+def get_authors(reference_authors: dict, paper_authors: list):
+    author_list = []
+    paper_authors = [author["authorId"] for author in paper_authors]
+    for reference_author in reference_authors:
+        if reference_author["authorId"] in paper_authors:
+            author_list.append(f'**{reference_author["name"]}**')
+        else:
+            author_list.append(reference_author["name"])
+    return ", ".join(author for author in author_list)
+
+
+def get_open_access_url(openAccessPdf):
+    if openAccessPdf:
+        return f'[download]({openAccessPdf["url"]})'
+    else:
+        return ""
+
+
+def format_citation_count(citationCount):
+    if citationCount > 0:
+        return f"{int(citationCount):,}"
+    else:
+        return None
+
+
+def generate_ref_table(paper):
+    markdown_text = """| title | venue | authors | download | citations |\n"""
+    markdown_text += """| --- | --- | --- | --- | --- |\n"""
+    for ref in paper.references:
+        markdown_text += f'| [{ref["title"]} ({ref["year"]})]({ref["url"]}) | {get_publication_venue_name(ref["publicationVenue"])} | {get_authors(ref["authors"], paper["authors"])} | {get_open_access_url(ref["openAccessPdf"])} | {format_citation_count(ref["citationCount"])} |\n'
+    return markdown_text
+
+
+def get_df_for_markdown(paper):
+    data = []
+    for ref in paper.references:
+        data.append(
+            (
+                ref["title"],
+                ref["year"],
+                ref["url"],
+                get_publication_venue_name(ref["publicationVenue"]),
+                get_authors(ref["authors"], paper["authors"]),
+                get_open_access_url(ref["openAccessPdf"]),
+                ref["citationCount"],
+            )
+        )
+
+    df_table = pd.DataFrame(
+        data,
+        columns=["title", "year", "url", "venue", "authors", "download", "citations"],
+    )
+    df_table = df_table.sort_values(by="citations", ascending=False)
+    df_table = df_table.reset_index()
+    return df_table
+
+
+def get_markdown_table(paper):
+    data = []
+    for ref in paper.references:
+        data.append(
+            (
+                ref["title"],
+                ref["year"],
+                ref["url"],
+                get_publication_venue_name(ref["publicationVenue"]),
+                get_authors(ref["authors"], paper["authors"]),
+                get_open_access_url(ref["openAccessPdf"]),
+                ref["citationCount"],
+            )
+        )
+
+    df_table = pd.DataFrame(
+        data,
+        columns=["title", "year", "url", "venue", "authors", "download", "citations"],
+    )
+
+    markdown = """| title | venue | authors | download | citations |\n"""
+    markdown += """| --- | --- | --- | --- | --- |\n"""
+    for i, r in df_table.sort_values(by="citations", ascending=False).iterrows():
+        markdown += f'| [{r["title"]} ({r["year"]})]({r["url"]}) | {r["venue"]} | {r["authors"]} | {r["download"]} | {format_citation_count(r["citations"])} |\n'
+    return markdown
+
+
+####### End of functions to generate table of references #######

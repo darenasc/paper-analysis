@@ -16,6 +16,8 @@ pandas = "*"
 plotly = "*"
 nbformat = "*"
 matplotlib = "*"
+ipywidgets = "*"
+tabulate = "*"
 
 [dev-packages]
 black = {extras = ["jupyter"], version = "*"}

@@ -8,8 +8,9 @@ Test the app in [paper-viz.streamlit.app](paper-viz.streamlit.app).
 
 ## APIs
 Using the following APIs and libraries:
-- [Semantic Scholar](https://www.semanticscholar.org)
-- [semanticscholar](https://github.com/danielnsilva/semanticscholar)
+- [Semantic Scholar](https://www.semanticscholar.org) as API for papers.
+- [semanticscholar](https://github.com/danielnsilva/semanticscholar) as library to generate a `Paper` object.
+- [streamlit](streamlit.io) to plot the timeline with the references of the paper.  
 
 Pending to add:
 - [DataCite API](https://support.datacite.org/docs/api)
