@@ -34,6 +34,12 @@ input_str = st.text_input("Search", "")
 def function_to_display(url: str, id_type: str):
     paper_id = s2.get_paper_id(url, id_type)
     paper = s2.get_paper_from_id(paper_id)
+
+    st.markdown(
+        f"<h1 style='text-align: center;'>{paper.title} ({paper.year})</h1>",
+        unsafe_allow_html=True,
+    )
+
     authors, tltr, fields_of_study = st.columns(3)
 
     # Increment the session states
@@ -49,30 +55,44 @@ def function_to_display(url: str, id_type: str):
             )
 
     with tltr:
-        st.markdown(
-            "<h3 style='text-align: center;'>tl;dr</h3>", unsafe_allow_html=True
-        )
-        st.markdown(
-            f"<p style='text-align: center;'>{paper.tldr}</p>", unsafe_allow_html=True
-        )
-        with st.expander("See abstract"):
+        if paper.tldr:
             st.markdown(
-                f"<p style='text-align: center;'><b>{paper.abstract}</p>",
+                "<h3 style='text-align: center;'>tl;dr</h3>", unsafe_allow_html=True
+            )
+            st.markdown(
+                f"<p style='text-align: center;'>{paper.tldr}</p>",
+                unsafe_allow_html=True,
+            )
+        if paper.abstract:
+            with st.expander("See abstract"):
+                st.markdown(
+                    f"<p style='text-align: center;'><b>{paper.abstract}</p>",
+                    unsafe_allow_html=True,
+                )
+
+    with fields_of_study:
+        fos = s2.get_fields_of_study(paper)
+        if fos:
+            st.markdown(
+                "<h3 style='text-align: center;'>Fields of study</h3>",
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f"<p style='text-align: center;'>{s2.get_fields_of_study(paper)}</p>",
+                unsafe_allow_html=True,
+            )
+            st.divider()
+        if paper.citationCount:
+            st.markdown(
+                f"<h3 style='text-align: center;'>{paper.citationCount:,} citations</h3>",
                 unsafe_allow_html=True,
             )
 
-    with fields_of_study:
-        st.markdown(
-            "<h3 style='text-align: center;'>Fields of study</h3>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<p style='text-align: center;'>{s2.get_fields_of_study(paper)}</p>",
-            unsafe_allow_html=True,
-        )
-
     df_references = s2.get_references_df(paper.references)
-    title = f"Paper: {paper.title} ({paper.year})"
+    if paper.referenceCount:
+        title = f"This paper has {paper.referenceCount:,} references"
+    else:
+        title = f"{paper.title}"
     fig = s2.plot_references_timeline(df_references, title)
     st.plotly_chart(fig, use_container_width=True, theme=None)
 
