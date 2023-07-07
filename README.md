@@ -1,10 +1,19 @@
 # Paper Analysis App (PAApp)
 
-Test the app in [paper-viz.streamlit.app](paper-viz.streamlit.app).
+Test the app in [paper-viz.streamlit.app](https://paper-viz.streamlit.app).
 
 ## How to use it
 1. Paste the url of a paper or DOI or valid ID in the search bar
 2. Check out the timeline of the references in the paper
+
+## Install it locally
+
+```
+git clone https://github.com/darenasc/paper-analysis.git
+cd paper-analysis
+pipenv install -e .
+pipenv run streamlit run app/app.py
+```
 
 ## APIs
 Using the following APIs and libraries:
