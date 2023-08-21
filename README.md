@@ -1,4 +1,4 @@
-# Paper Analysis App (PAApp)
+# Paper Analysis App
 
 Test the app in [paper-viz.streamlit.app](https://paper-viz.streamlit.app).
 
