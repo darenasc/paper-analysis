@@ -306,7 +306,7 @@ def get_df_for_markdown(paper):
         columns=["title", "year", "url", "venue", "authors", "download", "citations"],
     )
     df_table = df_table.sort_values(by="citations", ascending=False)
-    df_table = df_table.reset_index(drop=True, inplace=True)
+    df_table = df_table.reset_index(drop=True)
     return df_table
 
 
