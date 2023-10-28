@@ -34,14 +34,14 @@ def get_id_from_url(url: str) -> str:
     return url.split("/")[-1]
 
 
-def get_paper_from_id(paper_id: str):
-    """Returns the paper with the given id.
+def get_paper_from_id(paper_id: str) -> "semanticscholar.Paper":
+    """Returns the paper object with the given id.
 
     Args:
-        paper_id (str): Paper id
+        paper_id (str): Paper id.
 
     Returns:
-        _type_: _description_
+        (semanticscholar.Paper): Object with data about the paper.
     """
     sch = SemanticScholar()
     paper = sch.get_paper(paper_id)
@@ -306,7 +306,7 @@ def get_df_for_markdown(paper):
         columns=["title", "year", "url", "venue", "authors", "download", "citations"],
     )
     df_table = df_table.sort_values(by="citations", ascending=False)
-    df_table = df_table.reset_index()
+    df_table = df_table.reset_index(drop=True, inplace=True)
     return df_table
 
 

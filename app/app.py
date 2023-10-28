@@ -1,3 +1,5 @@
+from math import ceil
+
 import numpy as np
 import streamlit as st
 
@@ -31,9 +33,30 @@ if id_type == "URL":
 input_str = st.text_input("Search", "")
 
 
-def function_to_display(url: str, id_type: str):
+@st.cache_data
+def get_paper(url: str, id_type: str) -> "semanticscholar.SemanticScholar.Paper":
+    """Returns a cached paper object.
+
+    Args:
+        url (str): Search term to be used.
+        id_type (str): Type of
+
+    Returns:
+        _type_: _description_
+    """
     paper_id = s2.get_paper_id(url, id_type)
     paper = s2.get_paper_from_id(paper_id)
+    return paper
+
+
+def function_to_display(url: str, id_type: str):
+    """Function to display GUI items.
+
+    Args:
+        url (str): String the user input.
+        id_type (str): Where to search for the paper.
+    """
+    paper = get_paper(url, id_type)
 
     st.markdown(
         f"<h1 style='text-align: center;'>{paper.title} ({paper.year})</h1>",
@@ -45,6 +68,7 @@ def function_to_display(url: str, id_type: str):
     # Increment the session states
     st.session_state["_id"] += len(paper.references) + 1
 
+    # First column with authors
     with authors:
         st.markdown(
             "<h3 style='text-align: center;'>Authors</h3>", unsafe_allow_html=True
@@ -54,6 +78,7 @@ def function_to_display(url: str, id_type: str):
                 f"[{author['name']}]({author['url']}) (papers: {author['paperCount']}, citations: {author['citationCount']}, hIndex: {author['hIndex']})"
             )
 
+    # Second column with summary and abstract
     with tltr:
         if paper.tldr:
             st.markdown(
@@ -70,6 +95,7 @@ def function_to_display(url: str, id_type: str):
                     unsafe_allow_html=True,
                 )
 
+    # Third column with fielf of study
     with fields_of_study:
         fos = s2.get_fields_of_study(paper)
         if fos:
@@ -93,12 +119,12 @@ def function_to_display(url: str, id_type: str):
         title = f"This paper has {paper.referenceCount:,} references"
     else:
         title = f"{paper.title}"
+
+    # Chart with timeline of references and number of citations
     fig = s2.plot_references_timeline(df_references, title)
     st.plotly_chart(fig, use_container_width=True, theme=None)
 
-    # st.markdown(s2.generate_ref_table(paper))
-    # st.markdown(s2.get_markdown_table(paper))
-
+    # References
     colms = st.columns((2, 1, 1, 2, 2, 1, 1))
     fields = [
         "title",
@@ -109,8 +135,9 @@ def function_to_display(url: str, id_type: str):
         "download",
         "visualize paper",
     ]
+
+    # header columns
     for col, field_name in zip(colms, fields):
-        # header
         col.write(field_name)
 
     df_for_markdown = s2.get_df_for_markdown(paper)
