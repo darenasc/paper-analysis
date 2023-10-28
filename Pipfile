@@ -8,7 +8,6 @@ requests = "*"
 ipykernel = "*"
 streamlit = "*"
 bs4 = "*"
-paper-analysis = {editable = true, path = "."}
 pydoi = "*"
 crossrefapi = "*"
 semanticscholar = "*"
@@ -18,6 +17,7 @@ nbformat = "*"
 matplotlib = "*"
 ipywidgets = "*"
 tabulate = "*"
+pipfile = "*"
 
 [dev-packages]
 black = {extras = ["jupyter"], version = "*"}
@@ -25,4 +25,4 @@ mypy = "*"
 pylint = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.10"
