@@ -18,6 +18,7 @@ matplotlib = "*"
 ipywidgets = "*"
 tabulate = "*"
 pipfile = "*"
+paper-analysis = {editable = true, path = "."}
 
 [dev-packages]
 black = {extras = ["jupyter"], version = "*"}
