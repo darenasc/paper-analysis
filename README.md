@@ -1,5 +1,7 @@
 # Paper Analysis App
 
+This app generates a timeline plot with the references of a given paper and present some additional information such as: authors, title, summary of the paper (if available), abstract, field of study, number of citations, number of references, and a table with the papers in the references that can repeat the process for a referenced paper clicking on "Visualize paper".
+
 Test the app in [paper-viz.streamlit.app](https://paper-viz.streamlit.app).
 
 ## How to use it
@@ -31,7 +33,7 @@ Pending to add:
 
 ## ToDo
 
-- Extract paper data:
+- [x] Extract paper data:
     - [x] Authors
     - [x] Organizations
     - [x] Dates
@@ -39,3 +41,7 @@ Pending to add:
 - [x] Timeline
 - [ ] Graph
 - [ ] Map
+
+## Feedback
+
+[Suggest a new feature](https://github.com/darenasc/paper-analysis/issues).
