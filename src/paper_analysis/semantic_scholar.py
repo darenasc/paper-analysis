@@ -34,14 +34,14 @@ def get_id_from_url(url: str) -> str:
     return url.split("/")[-1]
 
 
-def get_paper_from_id(paper_id: str) -> "semanticscholar.Paper":
+def get_paper_from_id(paper_id: str) -> "semanticscholar.Paper.Paper":
     """Returns the paper object with the given id.
 
     Args:
         paper_id (str): Paper id.
 
     Returns:
-        (semanticscholar.Paper): Object with data about the paper.
+        (semanticscholar.Paper.Paper): Object with data about the paper.
     """
     sch = SemanticScholar()
     paper = sch.get_paper(paper_id)
@@ -116,14 +116,6 @@ def get_references_df(references: list) -> pd.DataFrame:
 
     x, y = df.citationCount.min(), df.citationCount.max()
     df["citation_size"] = (df.citationCount - x) / (y - x) * (b - a) + a
-
-    # min_size, max_size = 12, 1000
-    # x, y = df.influentialCitationCount.min(), df.influentialCitationCount.max()
-    # df["size"] = (df.influentialCitationCount - x) / (y - x) * (
-    #     max_size - min_size
-    # ) + min_size
-    # x, y = df.citationCount.min(), df.citationCount.max()
-    # df["size"] = (df.citationCount - x) / (y - x) * (max_size - min_size) + min_size
 
     # Sorting the dataframe by number of publications in venues
     df["total_citation_count"] = df.groupby(["venue"], as_index=False)[
@@ -239,21 +231,42 @@ def get_fields_of_study(paper: "Paper") -> str:
 
 
 ####### Functions to generate table of references #######
-def get_publication_venue_name(publicationVenue):
+def get_publication_venue_name(publication_venue: dict) -> str:
+    """Returns the name of the publication venue.
+
+    Args:
+        publicationVenue (dict): Dictionary with data about the publication
+        venue.
+
+    Returns:
+        str: Name of the publication venue.
+    """
     text = ""
     name = ""
-    if publicationVenue:
-        if "name" in publicationVenue:
-            name += publicationVenue["name"]
-        if "url" in publicationVenue:
-            text += f'[{name}]({publicationVenue["url"]})'
+    if publication_venue:
+        if "name" in publication_venue:
+            name += publication_venue["name"]
+        if "url" in publication_venue:
+            text += f'[{name}]({publication_venue["url"]})'
         else:
             text = name
 
     return text
 
 
-def get_authors(reference_authors: dict, paper_authors: list):
+def get_authors(reference_authors: dict, paper_authors: list) -> str:
+    """Returns a comma separated list with the author's names.
+
+    Authors of the paper are highlighted in the author list of the
+    references.
+
+    Args:
+        reference_authors (dict): Authors of the references.
+        paper_authors (list): Autors of the paper.
+
+    Returns:
+        str: List of authors with bol
+    """
     author_list = []
     paper_authors = [author["authorId"] for author in paper_authors]
     for reference_author in reference_authors:
@@ -264,21 +277,38 @@ def get_authors(reference_authors: dict, paper_authors: list):
     return ", ".join(author for author in author_list)
 
 
-def get_open_access_url(openAccessPdf):
-    if openAccessPdf:
-        return f'[download]({openAccessPdf["url"]})'
+def get_open_access_url(open_access_pdf: dict) -> str:
+    """Returns url to download the pdf of the paper.
+
+    Args:
+        open_access_pdf (dict): Pdf url.
+
+    Returns:
+        str: Url of the pdf.
+    """
+    if open_access_pdf:
+        return f'[download]({open_access_pdf["url"]})'
     else:
         return ""
 
 
-def format_citation_count(citationCount):
-    if citationCount > 0:
-        return f"{int(citationCount):,}"
+def format_citation_count(citation_count: dict) -> str:
+    """Returns number of citations of the paper.
+
+    Args:
+        citation_count (dict): Citations.
+
+    Returns:
+        str: Formatted number of citations.
+    """
+    if citation_count > 0:
+        return f"{int(citation_count):,}"
     else:
         return None
 
 
-def generate_ref_table(paper):
+def generate_ref_table(paper: "Paper") -> str:
+    """Returns a markdown text."""
     markdown_text = """| title | venue | authors | download | citations |\n"""
     markdown_text += """| --- | --- | --- | --- | --- |\n"""
     for ref in paper.references:
@@ -286,7 +316,15 @@ def generate_ref_table(paper):
     return markdown_text
 
 
-def get_df_for_markdown(paper):
+def get_df_for_markdown(paper: "Paper") -> pd.DataFrame:
+    """Returns a DataFrame with the references.
+
+    Args:
+        paper (Paper): Paper to be analysed.
+
+    Returns:
+        pd.DataFrame: DataFrame with information about the references.
+    """
     data = []
     for ref in paper.references:
         data.append(

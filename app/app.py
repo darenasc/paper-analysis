@@ -31,15 +31,22 @@ if id_type == "URL":
 input_str = st.text_input("Search", "")
 
 
-def function_to_display(url: str, id_type: str):
+@st.cache_data(show_spinner=False)
+def get_paper(url: str, id_type: str) -> "semanticscholar.Paper.Paper":
+    """Returns a cached paper object."""
+    paper_id = s2.get_paper_id(url, id_type)
+    paper = s2.get_paper_from_id(paper_id)
+    return paper
+
+
+def function_to_display(url: str, id_type: str) -> None:
     """Function to display GUI items.
 
     Args:
         url (str): String the user input.
         id_type (str): Where to search for the paper.
     """
-    paper_id = s2.get_paper_id(url, id_type)
-    paper = s2.get_paper_from_id(paper_id)
+    paper = get_paper(url, id_type)
 
     st.markdown(
         f"<h1 style='text-align: center;'>{paper.title} ({paper.year})</h1>",
@@ -124,7 +131,8 @@ def function_to_display(url: str, id_type: str):
         col.write(field_name)
 
     df_for_markdown = s2.get_df_for_markdown(paper)
-    for i, r in df_for_markdown.iterrows():
+    for i, _ in df_for_markdown.iterrows():
+        # Columns with refences
         col1, col2, col3, col4, col5, col6, col7 = st.columns((2, 1, 1, 2, 2, 1, 1))
         col1.write(df_for_markdown["title"][i])
         col2.write(

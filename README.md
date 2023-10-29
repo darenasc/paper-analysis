@@ -3,8 +3,10 @@
 Test the app in [paper-viz.streamlit.app](https://paper-viz.streamlit.app).
 
 ## How to use it
-1. Paste the url of a paper or DOI or valid ID in the search bar
+1. Paste the url, DOI or valid ID of a paper in the search bar
 2. Check out the timeline of the references in the paper
+
+![Example of paper](image.png)
 
 ## Install it locally
 

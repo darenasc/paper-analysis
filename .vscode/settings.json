@@ -11,5 +11,9 @@
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    },
+    "editor.rulers": [
+        80,
+        120
+    ]
 }
