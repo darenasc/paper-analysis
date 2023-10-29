@@ -16,7 +16,6 @@ Test the app in [paper-viz.streamlit.app](https://paper-viz.streamlit.app).
 git clone https://github.com/darenasc/paper-analysis.git
 cd paper-analysis
 pipenv install Piplife
-pipenv run pip install -e .
 pipenv run streamlit run app/app.py
 ```
 
